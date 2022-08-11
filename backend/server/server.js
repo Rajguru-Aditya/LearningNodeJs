@@ -1,9 +1,37 @@
 //Creating server with http
 
+const fs = require("fs");
 const http = require("http");
 
 const server = http.createServer((req, res) => {
-  console.log("Request was made");
+  console.log("Request was made: ", req.url);
+
+  //Set header content type
+  res.setHeader("Content-Type", "text/html");
+  let filePath = "../views/";
+
+  switch (req.url) {
+    case "/":
+      filePath += "index.html";
+      break;
+    case "/about":
+      filePath += "about.html";
+      break;
+    default:
+      filePath += "404.html";
+      break;
+  }
+
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.end();
+    } else {
+      res.end(data);
+    }
+  });
+
+  //Send HTML file
 });
 
 const port = 3000;
